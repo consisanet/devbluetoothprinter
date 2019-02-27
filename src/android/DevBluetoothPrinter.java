@@ -1,4 +1,4 @@
-package com.cordova.plugin.devbluetoothprinter;
+package cordova.plugin.devbluetoothprinter;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -110,7 +110,7 @@ public class DevBluetoothPrinter extends CordovaPlugin {
 		else if (action.equals("isConnected")) {
 			try {
 				this.isConnected(callbackContext);
-			} catch (IOException e) {
+			} catch (Exception e) {
 				Log.e(LOG_TAG, e.getMessage());
 				e.printStackTrace();
 			}
