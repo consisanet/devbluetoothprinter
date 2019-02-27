@@ -34,7 +34,7 @@
          <uses-permission android:name="android.permission.BLUETOOTH" />
       </config-file>
 
-      <source-file src="src/android/DevBluetoothPrinter.java" target-dir="src/com/cordova/plugin/devbluetoothprinter" />
+      <source-file src="src/android/DevBluetoothPrinter.java" target-dir="src/cordova/plugin/devbluetoothprinter" />
 
    </platform>
 </plugin>
