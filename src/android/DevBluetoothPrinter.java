@@ -108,7 +108,12 @@ public class DevBluetoothPrinter extends CordovaPlugin {
 			return true;
 		} 
 		else if (action.equals("isConnected")) {
-			this.isconnected(callbackContext);
+			try {
+				this.isConnected(callbackContext);
+			} catch (IOException e) {
+				Log.e(LOG_TAG, e.getMessage());
+				e.printStackTrace();
+			}
 			return true;
 		}
 		return false;
@@ -540,8 +545,10 @@ public class DevBluetoothPrinter extends CordovaPlugin {
 	public boolean isConnected(CallbackContext callbackContext) {
 		if (this.mmOutputStream != null) {
 			callbackContext.success();
+			return true;
 		} else {
 			callbackContext.error("Not connected.");
+			return false;
 		}
 	}
 
