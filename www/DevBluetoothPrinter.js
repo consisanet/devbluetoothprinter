@@ -22,7 +22,7 @@ module.exports = {
    printPOSCommand: function(str, fnSuccess, fnError){
       exec(fnSuccess, fnError, "DevBluetoothPrinter", "printPOSCommand", [str]);
    },
-   idConnected: function(fnSuccess, fnError){
+   isConnected: function(fnSuccess, fnError){
       exec(fnSuccess, fnError, "DevBluetoothPrinter", "isConnected", []);
    },
 };
