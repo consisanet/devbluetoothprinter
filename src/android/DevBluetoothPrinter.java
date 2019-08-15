@@ -1,6 +1,8 @@
 package cordova.plugin.devbluetoothprinter;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.InputStream;
@@ -285,8 +287,36 @@ public class DevBluetoothPrinter extends CordovaPlugin {
 		return false;
 	}
 
+	boolean printImage(CallbackContext callbackContext, String msg) throws IOException {
+		try {
+
+			final String encodedString = msg;
+			String pureBase64Encoded = encodedString.substring(encodedString.indexOf(",") + 1);
+			final byte[] decodedBytes = Base64.decode(pureBase64Encoded, Base64.DEFAULT);
+			Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+
+			//FileOutputStream os = new FileOutputStream(new File("/sdcard/Download/image_impressao.png"));
+            //decodedBitmap.compress(Bitmap.CompressFormat.PNG, 90, os);
+			//os.close();
+
+			DevPrinter printer = new DevPrinter(mmOutputStream);
+			printer.printImage(decodedBitmap);
+
+			callbackContext.success("Data Sent");
+			return true;
+
+
+		} catch (Exception e) {
+			String errMsg = e.getMessage();
+			Log.e(LOG_TAG, errMsg);
+			e.printStackTrace();
+			callbackContext.error(errMsg);
+		}
+		return false;
+	}
+
 	//This will send data to bluetooth printer
-    boolean printImage(CallbackContext callbackContext, String msg) throws IOException {
+/*    boolean printImage(CallbackContext callbackContext, String msg) throws IOException {
 		try {
 
 			final String encodedString = msg;
@@ -312,7 +342,8 @@ public class DevBluetoothPrinter extends CordovaPlugin {
 //
 //            bitmap.recycle();
 //
-			mmOutputStream.write(new byte[]{0x1B, 0x21, 0x03});
+			mmOutputStream.write(new byte[]{27, 64});
+			mmOutputStream.write(new byte[]{0x1B, 0x2A, 33, -128, 0});
 			//mmOutputStream.write(new byte[]{0x1B, 0x2A, 33, -128, 0});
 			mmOutputStream.write(bt);
 			mmOutputStream.write(new byte[]{10}); //new line
@@ -335,7 +366,7 @@ public class DevBluetoothPrinter extends CordovaPlugin {
 		return false;
 	}
 
-
+*/
     boolean printPOSCommand(CallbackContext callbackContext, byte[] buffer) throws IOException {
         try {
             //mmOutputStream.write(("Inam").getBytes());
@@ -492,12 +523,13 @@ public class DevBluetoothPrinter extends CordovaPlugin {
 
 			byte[] byteContent = new byte[(mWidth / 8 + 4)
 					* (mHeight + aHeight)];//
-			byte[] bytehead = new byte[4];
-			bytehead[0] = (byte) 0x1f;
-			bytehead[1] = (byte) 0x10;
-			bytehead[2] = (byte) (mWidth / 8);
-			bytehead[3] = (byte) 0x00;
-			for (int index = 4; index < mHeight + aHeight; index++) {
+			byte[] bytehead = new byte[5];
+			bytehead[0] = (byte) 0x1B;
+			bytehead[1] = (byte) 0x1A;
+			bytehead[2] = (byte) 33;
+			bytehead[3] = (byte) (mWidth/8);
+			bytehead[4] = (byte) 0;
+			for (int index = 5; index < mHeight + aHeight; index++) {
 				System.arraycopy(bytehead, 0, byteContent, index
 						* (perline + 4), 4);
 				System.arraycopy(nresult, index * perline, byteContent, index
@@ -604,7 +636,7 @@ public class DevBluetoothPrinter extends CordovaPlugin {
         }
 
         List<String> bmpHexList = binaryListToHexStringList(list);
-        String commandHexString = "1D763000";
+        //String commandHexString = "1D763000";
         String widthHexString = Integer
                 .toHexString(bmpWidth % 8 == 0 ? bmpWidth / 8
                         : (bmpWidth / 8 + 1));
@@ -626,7 +658,7 @@ public class DevBluetoothPrinter extends CordovaPlugin {
         heightHexString = heightHexString + "00";
 
         List<String> commandList = new ArrayList<String>();
-        commandList.add(commandHexString+widthHexString+heightHexString);
+        commandList.add(widthHexString+heightHexString);
         commandList.addAll(bmpHexList);
 
         return hexList2Byte(commandList);
