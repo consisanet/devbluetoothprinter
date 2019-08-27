@@ -35,6 +35,8 @@
       </config-file>
 
       <source-file src="src/android/DevBluetoothPrinter.java" target-dir="src/cordova/plugin/devbluetoothprinter" />
+      <source-file src="src/android/DevPrinter.java" target-dir="src/cordova/plugin/devbluetoothprinter" />
+      <source-file src="src/android/PrinterCommands.java" target-dir="src/cordova/plugin/devbluetoothprinter" />
 
    </platform>
 </plugin>
