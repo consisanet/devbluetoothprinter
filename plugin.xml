@@ -42,4 +42,19 @@
       <source-file src="src/android/BluetoothPrinter.java" target-dir="src/br/com/cordova/printer/bluetooth" />
 
    </platform>
+   
+   <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="BluetoothPrinter">
+                <param name="ios-package" value="BluetoothPrinter" onload="true"/>
+            </feature>
+        </config-file>
+        <header-file src="src/ios/BluetoothPrinter.h" />
+        <source-file src="src/ios/BluetoothPrinter.m" />
+
+        <framework src="src/ios/PrinterSDK" custom="true" />
+        <framework src="src/ios/PrinterSDK/libPrinterSDK.a" custom="true" />
+        <framework src="src/ios/PrinterSDK/PrinterSDK.h" custom="true" />
+
+    </platform>
 </plugin>
