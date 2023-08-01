@@ -36,8 +36,13 @@ import android.graphics.Paint;
 import android.graphics.Bitmap.Config;
 import android.util.Base64;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.PermissionChecker;
+
 public class DevBluetoothPrinter extends CordovaPlugin {
 	private static final String LOG_TAG = "DevBluetoothPrinter";
+	public static final int REQUEST_BLUETOOTH_PERMISSION = 1;
+
 	BluetoothAdapter mBluetoothAdapter;
 	BluetoothSocket mmSocket;
 	BluetoothDevice mmDevice;
@@ -55,7 +60,17 @@ public class DevBluetoothPrinter extends CordovaPlugin {
 
 	@Override
 	public boolean execute(String action, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
-		if (action.equals("list")) {
+		if (action.equals("status")) {
+	        if (PermissionChecker.checkSelfPermission(this.cordova.getContext(), android.Manifest.permission.BLUETOOTH_SCAN) != PermissionChecker.PERMISSION_GRANTED) {  
+                ActivityCompat.requestPermissions(
+                    this.cordova.getActivity(),    
+                    new String[] { android.Manifest.permission.BLUETOOTH_SCAN, android.Manifest.permission.BLUETOOTH_CONNECT },
+                    REQUEST_BLUETOOTH_PERMISSION
+                );
+            }
+            checkBTStatus(callbackContext);
+            return true;
+        } else if (action.equals("list")) {
 			listBT(callbackContext);
 			return true;
 		} else if (action.equals("connect")) {
@@ -121,6 +136,27 @@ public class DevBluetoothPrinter extends CordovaPlugin {
 		}
 		return false;
 	}
+	
+	 // This will return the status of BT adapter: true or false
+    boolean checkBTStatus(CallbackContext callbackContext) {
+		BluetoothAdapter mBluetoothAdapter = null;
+        try {
+            mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            if (mBluetoothAdapter.isEnabled()) {
+                callbackContext.success("true");
+                return true;
+            } else {
+                callbackContext.success("false");
+                return false;
+            }
+        } catch (Exception e) {
+            String errMsg = e.getMessage();
+            Log.e(LOG_TAG, errMsg);
+            e.printStackTrace();
+            callbackContext.error(errMsg);
+        }
+        return false;
+    }
 
     //This will return the array list of paired bluetooth printers
 	void listBT(CallbackContext callbackContext) {
