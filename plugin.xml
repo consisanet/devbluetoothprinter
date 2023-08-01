@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
-        id="cordova-plugin-btprinter"
-        version="0.1.0-dev">
+        id="cordova.plugin.devbluetoothprinter"
+        version="1.0.2">
 
    <name>BTPrinter</name>
    <description>A cordova plugin for bluetooth printer for android platform.</description>
