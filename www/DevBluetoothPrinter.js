@@ -1,6 +1,9 @@
 var exec = require('cordova/exec');
 
 module.exports = {
+   status: function (fnSuccess, fnError) {
+      exec(fnSuccess, fnError, "DevBluetoothPrinter", "status", []);
+   },
    list: function(fnSuccess, fnError){
       exec(fnSuccess, fnError, "DevBluetoothPrinter", "list", []);
    },
