@@ -1,6 +1,6 @@
 {
   "name": "cordova.plugin.devbluetoothprinter",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A cordova plugin for bluetooth printer for android platform.",
   "cordova": {
     "id": "cordova.plugin.devbluetoothprinter",
